@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Study Buddy</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f7fb,
+                    #eef3ff
+                );
+
+            color: #1f2937;
+
+            min-height: 100vh;
+
+            padding: 40px 20px;
+        }
+
+
+        /* =========================================
+           MAIN CONTAINER
+        ========================================= */
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .hero {
+            background: white;
+
+            border-radius: 24px;
+
+            padding: 35px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 15px 40px rgba(
+                    31,
+                    41,
+                    55,
+                    0.08
+                );
+
+            border: 1px solid #e8edf5;
+        }
+
+        .logo {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #eef2ff;
+
+            border-radius: 16px;
+
+            font-size: 30px;
+
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: 34px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+
+        /* =========================================
+           CARDS
+        ========================================= */
+
+        .card {
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            margin-bottom: 22px;
+
+            border: 1px solid #e8edf5;
+
+            box-shadow:
+                0 10px 30px rgba(
+                    31,
+                    41,
+                    55,
+                    0.06
+                );
+        }
+
+        .card-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin-bottom: 20px;
+        }
+
+        .step {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #eef2ff;
+
+            color: #4f46e5;
+
+            font-weight: bold;
+        }
+
+        .card h2 {
+            font-size: 19px;
+            color: #111827;
+        }
+
+        .card-description {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+
+        /* =========================================
+           FILE UPLOAD
+        ========================================= */
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            transition: 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #6366f1;
+            background: #f5f7ff;
+        }
+
+        .upload-icon {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+
+            padding: 12px;
+
+            margin-top: 12px;
+
+            border: 1px solid #dbe1ea;
+
+            border-radius: 10px;
+
+            background: white;
+        }
+
+
+        /* =========================================
+           BUTTONS
+        ========================================= */
+
+        .button-row {
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-top: 18px;
+        }
+
+        button {
+            border: none;
+
+            border-radius: 11px;
+
+            padding: 12px 20px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.15s,
+                box-shadow 0.15s,
+                opacity 0.15s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 6px 16px rgba(
+                    79,
+                    70,
+                    229,
+                    0.18
+                );
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .secondary {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================= */
+
+        .status {
+            margin-top: 15px;
+
+            padding: 12px 15px;
+
+            border-radius: 10px;
+
+            display: none;
+
+            font-size: 14px;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.success {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status.error {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .status.loading {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+
+        /* =========================================
+           OUTPUT GRID
+        ========================================= */
+
+        .output-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+        .output-card {
+            border: 1px solid #e5e7eb;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            background: #fafbff;
+        }
+
+        .output-title {
+            padding: 16px 18px;
+
+            background: white;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            font-weight: 700;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .output-content {
+            padding: 18px;
+
+            min-height: 250px;
+
+            white-space: pre-wrap;
+
+            line-height: 1.65;
+
+            color: #374151;
+
+            font-size: 14px;
+
+            overflow-wrap: anywhere;
+        }
+
+
+        /* =========================================
+           LOADING
+        ========================================= */
+
+        .loading-box {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: #6366f1;
+        }
+
+        .spinner {
+            width: 17px;
+            height: 17px;
+
+            border: 2px solid #dbeafe;
+
+            border-top-color: #4f46e5;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .footer {
+            text-align: center;
+
+            color: #9ca3af;
+
+            font-size: 13px;
+
+            margin-top: 25px;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 20px 12px;
+            }
+
+            .hero {
+                padding: 25px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .output-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- =========================================
+         HERO
+    ========================================== -->
+
+    <section class="hero">
+
+        <div class="logo">
+            🎓
+        </div>
+
+        <h1>
+            AI Study Buddy
+        </h1>
+
+        <p>
+            Upload your study material and turn it
+            into concise summaries and useful
+            flashcards.
+        </p>
+
+    </section>
+
+
+    <!-- =========================================
+         UPLOAD
+    ========================================== -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div class="step">
+                1
+            </div>
+
+            <h2>
+                Upload Study Material
+            </h2>
+
+        </div>
+
+        <p class="card-description">
+            Supported formats: TXT, PDF and PPTX.
+        </p>
+
+
+        <div class="upload-area">
+
+            <div class="upload-icon">
+                📚
+            </div>
+
+            <strong>
+                Choose your study notes
+            </strong>
+
+            <input
+                type="file"
+                id="noteFile"
+                accept=".txt,.pdf,.pptx"
+            >
+
+        </div>
+
+
+        <div class="button-row">
+
+            <button
+                class="primary"
+                id="uploadButton"
+                onclick="uploadNotes()"
+            >
+                Process Notes
+            </button>
+
+        </div>
+
+
+        <div
+            id="uploadStatus"
+            class="status"
+        ></div>
+
+    </section>
+
+
+    <!-- =========================================
+         GENERATE
+    ========================================== -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div class="step">
+                2
+            </div>
+
+            <h2>
+                Generate Study Material
+            </h2>
+
+        </div>
+
+        <p class="card-description">
+            Choose what you want your AI Study Buddy
+            to generate.
+        </p>
+
+
+        <div class="button-row">
+
+            <button
+                class="primary"
+                id="summaryButton"
+                onclick="fetchAsset(
+                    '/summarize',
+                    'summaryOutput',
+                    'summaryButton'
+                )"
+            >
+                ✨ Generate Summary
+            </button>
+
+
+            <button
+                class="secondary"
+                id="flashcardButton"
+                onclick="fetchAsset(
+                    '/flashcards',
+                    'flashcardOutput',
+                    'flashcardButton'
+                )"
+            >
+                🧠 Generate Flashcards
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         OUTPUTS
+    ========================================== -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div class="step">
+                3
+            </div>
+
+            <h2>
+                Your Study Material
+            </h2>
+
+        </div>
+
+
+        <div class="output-grid">
+
+
+            <!-- SUMMARY -->
+
+            <div class="output-card">
+
+                <div class="output-title">
+                    ✨ Core Summary
+                </div>
+
+                <div
+                    class="output-content"
+                    id="summaryOutput"
+                >
+                    Your summary will appear here.
+                </div>
+
+            </div>
+
+
+            <!-- FLASHCARDS -->
+
+            <div class="output-card">
+
+                <div class="output-title">
+                    🧠 Flashcards
+                </div>
+
+                <div
+                    class="output-content"
+                    id="flashcardOutput"
+                >
+                    Your flashcards will appear here.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <div class="footer">
+        AI Study Buddy • Local AI • No paid APIs
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+    // ========================================================
+    // STATUS HELPER
+    // ========================================================
+
+    function showStatus(
+        message,
+        type
+    ) {
+
+        const status =
+            document.getElementById(
+                "uploadStatus"
+            );
+
+        status.innerText = message;
+
+        status.className =
+            "status show " + type;
+    }
+
+
+    // ========================================================
+    // UPLOAD NOTES
+    // ========================================================
+
+    async function uploadNotes() {
+
+        const fileInput =
+            document.getElementById(
+                "noteFile"
+            );
+
+        const button =
+            document.getElementById(
+                "uploadButton"
+            );
+
+
+        if (
+            fileInput.files.length === 0
+        ) {
+
+            showStatus(
+                "Please select a file first.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const file =
+            fileInput.files[0];
+
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "file",
+            file
+        );
+
+
+        button.disabled = true;
+
+        button.innerText =
+            "Processing...";
+
+
+        showStatus(
+            "Reading your study material and creating embeddings...",
+            "loading"
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/upload",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Upload failed."
+                );
+            }
+
+
+            showStatus(
+                data.message,
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            showStatus(
+                error.message,
+                "error"
+            );
+
+
+        } finally {
+
+            button.disabled = false;
+
+            button.innerText =
+                "Process Notes";
+        }
+
+    }
+
+
+    // ========================================================
+    // GENERATE SUMMARY / FLASHCARDS
+    // ========================================================
+
+    async function fetchAsset(
+        url,
+        targetId,
+        buttonId
+    ) {
+
+        const output =
+            document.getElementById(
+                targetId
+            );
+
+        const button =
+            document.getElementById(
+                buttonId
+            );
+
+
+        button.disabled = true;
+
+
+        output.innerHTML = `
+            <div class="loading-box">
+                <div class="spinner"></div>
+                <span>Generating...</span>
+            </div>
+        `;
+
+
+        try {
+
+            const response =
+                await fetch(url);
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Generation failed."
+                );
+            }
+
+
+            // IMPORTANT:
+            // /summarize returns "summary"
+            // /flashcards returns "flashcards"
+
+            if (url === "/summarize") {
+
+                output.innerText =
+                    data.summary ||
+                    "No summary was generated.";
+
+            }
+
+            else if (
+                url === "/flashcards"
+            ) {
+
+                output.innerText =
+                    data.flashcards ||
+                    "No flashcards were generated.";
+            }
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            output.innerText =
+                "Error: " +
+                error.message;
+
+
+        } finally {
+
+            button.disabled = false;
+
+        }
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
