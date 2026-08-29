@@ -126,8 +126,5 @@ Document processing and model inference are performed locally. The application d
 ├── rag_engine.py
 ├── templates/
 │   └── index.html
-├── static/
-│   └── ...
-├── requirements.txt
 └── README.md
 ```
